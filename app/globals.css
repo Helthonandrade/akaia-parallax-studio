@@ -11,4 +11,12 @@
 .camera-rig,.parts-3d{position:absolute;inset:0;transform-style:preserve-3d}.camera-rig{transition:transform .08s linear}.camera-cutout,.parts-3d img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 26px 28px #000b);will-change:transform,opacity}.camera-cutout{z-index:2;transition:opacity .1s linear}.parts-3d{transition:opacity .1s linear}.parts-3d img{transition:transform .08s linear;backface-visibility:visible}.camera-sequence{display:none}
 @media(prefers-reduced-motion:reduce){.camera-rig,.camera-cutout,.parts-3d,.parts-3d img{transition:none}}
 .camera-cutout,.parts-3d{display:none}.camera-component{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 22px 26px #000b);transform-style:preserve-3d;backface-visibility:visible;transition:transform .1s linear;will-change:transform}.camera-rig{transform-origin:50% 52%;perspective:1800px}.camera-stage{overflow:visible}
+.camera-whole{position:absolute;z-index:4;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 25px 30px #000c);transition:opacity .1s linear}.camera-component{transition:transform .1s linear,opacity .1s linear}
 @media(prefers-reduced-motion:reduce){.camera-component{transition:none}}
+.camera-stage{top:58%;width:min(50vw,730px);height:min(35vw,500px)}.scroll-cue{bottom:3vh}.camera-whole{opacity:1}
+@media(max-width:760px){.camera-stage{top:56%;width:88vw;height:58vw}.scroll-cue{bottom:3vh;max-width:calc(100vw - 36px)}}
+.camera-scene{height:300vh}.camera-stage{width:min(35vw,511px);height:min(24.5vw,350px)}
+@media(max-width:760px){.camera-scene{height:270vh}.camera-stage{width:61.6vw;height:40.6vw}}
+.camera-rig{transition:transform .18s cubic-bezier(.22,.61,.36,1)}.camera-component{transition:transform .2s cubic-bezier(.22,.61,.36,1),opacity .18s ease}.camera-whole{transition:opacity .2s ease}
+.camera-stage{top:56%;width:94vw;height:74vh;pointer-events:none;perspective:none}.camera-stage:after{left:38%;right:38%;bottom:17%;height:5%;opacity:.48}.camera-webgl,.camera-webgl canvas{position:absolute;inset:0;width:100%;height:100%;display:block}.camera-webgl canvas{filter:drop-shadow(0 24px 28px #0009)}
+@media(max-width:760px){.camera-stage{top:55%;width:100vw;height:68vh}.camera-stage:after{left:29%;right:29%;bottom:19%}}
