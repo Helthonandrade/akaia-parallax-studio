@@ -42,6 +42,7 @@ export default function Camera3D({ progress }: Camera3DProps) {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     mount.appendChild(renderer.domElement);
+    const canvas = renderer.domElement;
 
     scene.add(new THREE.HemisphereLight(0xeaf1ff, 0x15100d, 2.3));
     const key = new THREE.DirectionalLight(0xffffff, 4.2);
@@ -142,8 +143,9 @@ export default function Camera3D({ progress }: Camera3DProps) {
       view.updateProjectionMatrix();
       rig.scale.setScalar(rect.width < 700 ? 0.58 : 0.72);
     };
-    const observer = new ResizeObserver(resize);
-    observer.observe(mount);
+    const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(resize) : null;
+    observer?.observe(mount);
+    if (!observer) window.addEventListener('resize', resize, { passive: true });
     resize();
 
     let shown = target.current;
@@ -162,6 +164,7 @@ export default function Camera3D({ progress }: Camera3DProps) {
         part.group.rotation.set(part.spin.x * local, part.spin.y * local, part.spin.z * local);
       });
       renderer.render(scene, view);
+      mount.classList.add('camera-webgl--ready');
       frame = requestAnimationFrame(render);
     };
     render();
@@ -174,11 +177,21 @@ export default function Camera3D({ progress }: Camera3DProps) {
       }
     };
     document.addEventListener('visibilitychange', visibility);
+    const contextLost = (event: Event) => {
+      event.preventDefault();
+      mount.classList.remove('camera-webgl--ready');
+    };
+    const contextRestored = () => mount.classList.add('camera-webgl--ready');
+    canvas.addEventListener('webglcontextlost', contextLost);
+    canvas.addEventListener('webglcontextrestored', contextRestored);
 
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener('visibilitychange', visibility);
-      observer.disconnect();
+      observer?.disconnect();
+      if (!observer) window.removeEventListener('resize', resize);
+      canvas.removeEventListener('webglcontextlost', contextLost);
+      canvas.removeEventListener('webglcontextrestored', contextRestored);
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh) object.geometry.dispose();
       });
@@ -188,5 +201,5 @@ export default function Camera3D({ progress }: Camera3DProps) {
     };
   }, []);
 
-  return <div className="camera-webgl" ref={host} aria-hidden="true" />;
+  return <div className="camera-webgl" ref={host} aria-hidden="true"><img className="camera-mobile-fallback" src="/images/camera-cutout-assembled.png" alt="" /></div>;
 }
