@@ -20,3 +20,6 @@
 .camera-rig{transition:transform .18s cubic-bezier(.22,.61,.36,1)}.camera-component{transition:transform .2s cubic-bezier(.22,.61,.36,1),opacity .18s ease}.camera-whole{transition:opacity .2s ease}
 .camera-stage{top:56%;width:94vw;height:74vh;pointer-events:none;perspective:none}.camera-stage:after{left:38%;right:38%;bottom:17%;height:5%;opacity:.48}.camera-webgl,.camera-webgl canvas{position:absolute;inset:0;width:100%;height:100%;display:block}.camera-webgl canvas{filter:drop-shadow(0 24px 28px #0009)}
 @media(max-width:760px){.camera-stage{top:55%;width:100vw;height:68vh}.camera-stage:after{left:29%;right:29%;bottom:19%}}
+@supports(height:100dvh){.camera-sticky,.work-sticky,.about-sticky{height:100dvh}}
+.camera-webgl--fallback{background:url('/images/camera-cutout-assembled.png') center/contain no-repeat;filter:drop-shadow(0 24px 28px #0009)}
+@media(prefers-reduced-motion:reduce){.camera-scene{height:115vh}.camera-webgl{transform:none}}

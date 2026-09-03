@@ -27,8 +27,15 @@ export default function Camera3D({ progress }: Camera3DProps) {
     const view = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
     view.position.set(0, 0.15, 13.5);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+    } catch {
+      mount.classList.add('camera-webgl--fallback');
+      return;
+    }
+    const compact = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, compact ? 1.35 : 1.8));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
@@ -141,7 +148,9 @@ export default function Camera3D({ progress }: Camera3DProps) {
 
     let shown = target.current;
     let frame = 0;
+    let active = !document.hidden;
     const render = () => {
+      if (!active) return;
       shown += (target.current - shown) * 0.075;
       const wave = Math.sin(Math.PI * shown);
       const explosion = smooth(Math.max(0, wave));
@@ -157,8 +166,18 @@ export default function Camera3D({ progress }: Camera3DProps) {
     };
     render();
 
+    const visibility = () => {
+      active = !document.hidden;
+      if (active) {
+        cancelAnimationFrame(frame);
+        render();
+      }
+    };
+    document.addEventListener('visibilitychange', visibility);
+
     return () => {
       cancelAnimationFrame(frame);
+      document.removeEventListener('visibilitychange', visibility);
       observer.disconnect();
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh) object.geometry.dispose();
